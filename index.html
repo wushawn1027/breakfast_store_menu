@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Breakfast Store Menu</title>
     <style>
         body{
             margin: 0px;
@@ -57,41 +57,41 @@
         <h2>購物車資訊</h2>
         <div class="goods">
             <div class="merch-card">
-                商品名稱: 漢堡 <br>
-                商品價格: 78元 <br>
+                商品名稱: 卡啦雞漢堡 <br>
+                商品價格: 60元 <br>
                 <div class="price">
                     購買數量: <input type="text" class="qty" v-model="qty1"> 
-                    品項小記:{{78*qty1}}
+                    品項小記:{{60*qty1}}
                 </div>
             </div>
             <div class="merch-card">
-                商品名稱: 薯條(大) <br>
-                商品價格: 56元 <br>
+                商品名稱: 巧克力吐司 <br>
+                商品價格: 20元 <br>
                 <div class="price">
                     購買數量: <input type="text" class="qty" v-model="qty2"> 
-                    品項小記:{{56*qty2}}
+                    品項小記:{{20*qty2}}
                 </div>
             </div>
             <div class="merch-card">
-                商品名稱: 飲料 <br>
-                商品價格: 40元 <br>
+                商品名稱: 檸檬紅茶 <br>
+                商品價格: 20元 <br>
                 <div class="price">
                     購買數量: <input type="text" class="qty" v-model="qty3"> 
-                    品項小記:{{40*qty3}}
+                    品項小記:{{20*qty3}}
                 </div>
             </div>
             <div class="merch-card">
-                商品名稱: 玉米濃湯(小) <br>
-                商品價格: 33元 <br>
+                商品名稱: 豆漿 <br>
+                商品價格: 25元 <br>
                 <div class="price">
                     購買數量: <input type="text" class="qty" v-model="qty4"> 
-                    品項小記:{{33*qty4}}
+                    品項小記:{{25*qty4}}
                 </div>
             </div>
         </div>
         <div class="cal_total">
             小記: {{ getSubTotal() }}元<br>
-            運費: {{ getSubTotal() >= 1000 ? '免運' : '60元' }}<br> <!-- {{ if條件 ? true : false }} -->
+            運費: {{ getSubTotal() >= 1000 ? '免運' : '60元' }}<br>
             總價: {{ getSubTotal() >= 1000 ? getSubTotal() : getSubTotal()+60 }}元<br>
         </div>
 
@@ -118,14 +118,11 @@
         <h2>訂單資訊</h2>
 
         <p>{{name}}您好, 感謝您的訂購, 請您送出前確認以下資訊。</p>
-        <p>共訂購{{qty1}}個漢堡, {{qty2}}份薯條, {{qty3}}杯飲料, {{qty4}}杯玉米濃湯。</p>
+        <p>共訂購{{qty1}}份卡啦雞漢堡, {{qty2}}份巧克力吐司, {{qty3}}杯檸檬紅茶, {{qty4}}杯豆漿。</p>
         
-        <!-- 可使用 v-show="條件" 去判斷此元素是否要顯示在畫面上 -->
         <p v-show="getSubTotal() < 1000">加上運費總價為 {{ getSubTotal() >= 1000 ? getSubTotal() : getSubTotal()+60 }}元。</p>
         <p v-show="getSubTotal() >= 1000">總價為 {{ getSubTotal() >= 1000 ? getSubTotal() : getSubTotal()+60 }}元。</p>
-        <!-- v-if="條件" 去判斷此元素是否要render在畫面上 -->
         
-        <!-- 顯示住址 以及面交的方式 -->
         <p>您的取貨地點與方式為: {{address + delivery()}}。</p>
 
         <p>連絡電話為:{{phone}}。</p>
@@ -155,7 +152,7 @@
             
             methods: {
                 getSubTotal: function(){
-                    return this.qty1 * 78 +  this.qty2 * 56 + this.qty3 * 40 + this.qty4 * 33
+                    return this.qty1 * 60 +  this.qty2 * 20 + this.qty3 * 20 + this.qty4 * 25
                 },
 
                 delivery: function(){
@@ -180,13 +177,6 @@
                 }
             },
             
-            // computed: {
-                
-            // },
-            
-            // mounted() {
-
-            // },
             
         })
 
