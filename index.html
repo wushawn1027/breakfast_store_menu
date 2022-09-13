@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            margin: 0px;
+            background-color: skyblue;
+        }
+        form{
+            width: 500px;
+            margin: auto;
+            background-color: bisque;
+        }
+        h2{
+            font-weight: bold;
+        }
+        .goods{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            border-bottom: 2px solid black;
+        }
+        .goods .merch-card{
+            width: 80%;
+            padding:5px  20px;
+            border-radius: 20px;
+            border: 1px solid black;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        .goods .merch-card .price{
+            display: flex;
+        }
+        .goods .merch-card .price input{
+            width: 100px;
+        }
+        .goods .merch-card .price .qty{
+            margin-right: auto;
+        }
+        .cal_total{
+            text-align: right;
+            padding:0px 50px;
+        }
+        button{
+            margin: auto;
+            display: block;
+        }
+    </style>
+</head>
+<body id="vue_area">
+    <form action="" method="post">
+        <h2>購物車資訊</h2>
+        <div class="goods">
+            <div class="merch-card">
+                商品名稱: 漢堡 <br>
+                商品價格: 78元 <br>
+                <div class="price">
+                    購買數量: <input type="text" class="qty" v-model="qty1"> 
+                    品項小記:{{78*qty1}}
+                </div>
+            </div>
+            <div class="merch-card">
+                商品名稱: 薯條(大) <br>
+                商品價格: 56元 <br>
+                <div class="price">
+                    購買數量: <input type="text" class="qty" v-model="qty2"> 
+                    品項小記:{{56*qty2}}
+                </div>
+            </div>
+            <div class="merch-card">
+                商品名稱: 飲料 <br>
+                商品價格: 40元 <br>
+                <div class="price">
+                    購買數量: <input type="text" class="qty" v-model="qty3"> 
+                    品項小記:{{40*qty3}}
+                </div>
+            </div>
+            <div class="merch-card">
+                商品名稱: 玉米濃湯(小) <br>
+                商品價格: 33元 <br>
+                <div class="price">
+                    購買數量: <input type="text" class="qty" v-model="qty4"> 
+                    品項小記:{{33*qty4}}
+                </div>
+            </div>
+        </div>
+        <div class="cal_total">
+            小記: {{ getSubTotal() }}元<br>
+            運費: {{ getSubTotal() >= 1000 ? '免運' : '60元' }}<br> <!-- {{ if條件 ? true : false }} -->
+            總價: {{ getSubTotal() >= 1000 ? getSubTotal() : getSubTotal()+60 }}元<br>
+        </div>
+
+        <h2>購買人資訊</h2>
+        <div>姓名: <input type="text" v-model="name"></div>
+        <div>電話: <input type="text" v-model="phone"></div>
+        <div>住址: <input type="text" v-model="address"></div>
+
+        <h2>其他資訊</h2>
+        <div>
+            付款方式: 
+            <br><input id="payway1" type="radio" name="pay" value="1" v-model="pay"><label for="payway1">現金</label> 
+            <br><input id="payway2" type="radio" name="pay" value="2" v-model="pay"><label for="payway2">信用卡</label>
+        </div>
+        <div>
+            是否需要送上樓: 
+            <br><input id="way1" type="radio" name="stair" value="1" v-model="stair"><label for="way1">是, 有電梯</label> 
+            <br><input id="way2" type="radio" name="stair" value="2" v-model="stair"><label for="way2">是, 無電梯</label>
+            <br><input id="way3" type="radio" name="stair" value="3" v-model="stair" v-bind:disabled="card()"><label for="way3">否, 交付於管理室</label>
+            <br><input id="way4" type="radio" name="stair" value="4" v-model="stair"><label for="way4">否, 親自取餐</label>
+
+        </div>
+
+        <h2>訂單資訊</h2>
+
+        <p>{{name}}您好, 感謝您的訂購, 請您送出前確認以下資訊。</p>
+        <p>共訂購{{qty1}}個漢堡, {{qty2}}份薯條, {{qty3}}杯飲料, {{qty4}}杯玉米濃湯。</p>
+        
+        <!-- 可使用 v-show="條件" 去判斷此元素是否要顯示在畫面上 -->
+        <p v-show="getSubTotal() < 1000">加上運費總價為 {{ getSubTotal() >= 1000 ? getSubTotal() : getSubTotal()+60 }}元。</p>
+        <p v-show="getSubTotal() >= 1000">總價為 {{ getSubTotal() >= 1000 ? getSubTotal() : getSubTotal()+60 }}元。</p>
+        <!-- v-if="條件" 去判斷此元素是否要render在畫面上 -->
+        
+        <!-- 顯示住址 以及面交的方式 -->
+        <p>您的取貨地點與方式為: {{address + delivery()}}。</p>
+
+        <p>連絡電話為:{{phone}}。</p>
+
+        <p>如果以上資訊無誤, 請按下方按鈕送出訂單。</p>
+        <button type="submit">送出訂單</button>
+    </form>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        
+        const viewmodel = Vue.createApp({
+            
+            data() {
+                return {
+                    qty1:0,
+                    qty2:0,
+                    qty3:0,
+                    qty4:0,
+                    name:'',
+                    phone:'',
+                    address:'',
+                    stair:'',
+                    pay:'',
+                }
+            },
+            
+            methods: {
+                getSubTotal: function(){
+                    return this.qty1 * 78 +  this.qty2 * 56 + this.qty3 * 40 + this.qty4 * 33
+                },
+
+                delivery: function(){
+                    if (this.stair == '1') {
+                        return ', 需送上樓, 有電梯可用'
+                    } else if(this.stair == '2') {
+                        return ', 需送上樓, 無電梯可用'
+                    } else if(this.stair == '3') {
+                        return ', 交付於管理室(限信用卡付款)'
+                    } else if(this.stair == '4') {
+                        return ', 送至門口, 親自取餐'
+                    } else{
+                        return '未選擇'
+                    }
+                },
+                card: function(){
+                    if(this.pay == 1){
+                        return true
+                    }else if (this.pay == 2){
+                        return false
+                    }
+                }
+            },
+            
+            // computed: {
+                
+            // },
+            
+            // mounted() {
+
+            // },
+            
+        })
+
+        viewmodel.mount('#vue_area')
+
+    </script>
+</body>
+</html>
